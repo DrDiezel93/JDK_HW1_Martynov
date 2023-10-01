@@ -10,14 +10,13 @@ public class ChatServer extends JFrame {
     private static final int WINDOW_POS_X = 200;
     private static final int WINDOW_POS_Y = 200;
     boolean startConst = true;
+    boolean stopConst = true;
     JPanel panelMesagge = new JPanel();
 
     File file = new File("chatServ.txt");
 
     JButton btnStart = new JButton("Start");
     JButton btnStop = new JButton("Stop");
-
-    ChatClient chat = new ChatClient();
 
     public ChatServer() {
         super("ChatServer");
@@ -39,24 +38,26 @@ public class ChatServer extends JFrame {
         btnStart.addActionListener(actionListener1);
         ActionListener actionListener2 = new btnStop();
         btnStop.addActionListener(actionListener2);
-
+        stopConst = false;
         setVisible(true);
-        chat.setVisible(false);
     }
     public class btnStop implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-//            System.exit(0);
-            panelMesagge.removeAll();
-            panelMesagge.repaint();
-            panelMesagge.revalidate();
-            startConst = true;
-            chat.setVisible(false);
+            if(stopConst){
+                panelMesagge.removeAll();
+                panelMesagge.repaint();
+                panelMesagge.revalidate();
+                startConst = true;
+                stopConst = false;
+            }
+            else {
+                System.out.println("Сервер уже остановлен");
+            }
         }
     }
     public class btnStart implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             if (startConst) {
-                chat.setVisible(true);
                 if(file.exists()){
                     try {
                         chatArchive(file, panelMesagge);
@@ -64,26 +65,8 @@ public class ChatServer extends JFrame {
                         throw new RuntimeException(ex);
                     }
                 }
-                chat.setVisible(true);
-                chat.txtMsg.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        try {
-                            addMessage(panelMesagge, chat);
-                        } catch (Exception ex) {
-                                throw new RuntimeException(ex);
-                        }
-                    }
-                });
-                chat.btnSend.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        try {
-                            addMessage(panelMesagge, chat);
-                            } catch (Exception ex) {
-                                throw new RuntimeException(ex);
-                        }
-                    }
-                });
                 startConst = false;
+                stopConst = true;
             }
             else {
                 System.out.println("Сервер уже запущен");
@@ -98,31 +81,6 @@ public class ChatServer extends JFrame {
             JLabel gg = new JLabel();
             jPanel.add(gg);
             gg.setText(st);
-        }
-    }
-
-    public static void addMessage (JPanel jPanel, ChatClient chat) throws Exception{
-        String str = chat.txtMsg.getText();
-        if(str.length() == 0) throw new Exception("Пустая строка");
-        else{
-            JLabel chatMessage = new JLabel();
-            jPanel.add(chatMessage);
-            chatMessage.setText(chat.txtLogin.getText() + ": " + str);
-            addTextFile(chat.txtLogin.getText() + ": " + str);
-            jPanel.add(new JLabel(""));
-            chat.txtMsg.setText("");
-        }
-    }
-
-    public static void addTextFile(String str){
-        try(FileWriter writer = new FileWriter("chatServ.txt", true))
-        {
-            writer.write(str);
-            writer.append('\n');
-            writer.flush();
-        }
-        catch(IOException ex) {
-            System.out.println(ex.getMessage());
         }
     }
 }

@@ -1,6 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class ChatClient extends JFrame {
     private static final int WINDOW_HEIGHT = 500;
@@ -22,7 +26,7 @@ public class ChatClient extends JFrame {
     JTextField txtLogin = new JTextField("DrDiezel");
     JPasswordField txtPass = new JPasswordField("123456");
 
-    public ChatClient() {
+    public ChatClient(ChatServer chatServ) {
 //        setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setLocation(WINDOW_POS_X, WINDOW_POS_Y);
@@ -41,6 +45,60 @@ public class ChatClient extends JFrame {
         panelReg2.add(txtMsg);
         panelReg2.add(btnSend);
         add(panelReg2, BorderLayout.SOUTH);
+
+        txtMsg.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(chatServ.stopConst){
+                    try {
+                        addMessage(chatServ.panelMesagge);
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+                else System.out.println("Сервер не отвечает");
+            }
+        });
+
+        btnSend.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(chatServ.stopConst){
+                    try {
+                        addMessage(chatServ.panelMesagge);
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+                else System.out.println("Сервер не отвечает");
+            }
+        });
+
+        setVisible(true);
     }
 
+    public void addMessage (JPanel jPanel) throws Exception{
+        String str = txtMsg.getText();
+        if(str.length() == 0) throw new Exception("Пустая строка");
+        else{
+            JLabel chatMessage = new JLabel();
+            jPanel.add(chatMessage);
+            chatMessage.setText(txtLogin.getText() + ": " + str);
+            addTextFile(txtLogin.getText() + ": " + str);
+            jPanel.add(new JLabel(""));
+            txtMsg.setText("");
+        }
+    }
+
+    public static void addTextFile(String str){
+        try(FileWriter writer = new FileWriter("chatServ.txt", true))
+        {
+            writer.write(str);
+            writer.append('\n');
+            writer.flush();
+        }
+        catch(IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
 }
