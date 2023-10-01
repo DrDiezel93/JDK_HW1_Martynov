@@ -11,7 +11,7 @@ public class ChatServer extends JFrame {
     private static final int WINDOW_POS_Y = 200;
     boolean startConst = true;
     boolean stopConst = true;
-    JPanel panelMesagge = new JPanel();
+    JPanel panelMessage = new JPanel();
 
     File file = new File("chatServ.txt");
 
@@ -32,8 +32,8 @@ public class ChatServer extends JFrame {
         panelBtn.add(btnStart);
         panelBtn.add(btnStop);
         add(panelBtn, BorderLayout.SOUTH);
-        panelMesagge.setLayout(new BoxLayout(panelMesagge, BoxLayout.Y_AXIS));
-        add(panelMesagge, BorderLayout.NORTH);
+        panelMessage.setLayout(new BoxLayout(panelMessage, BoxLayout.Y_AXIS));
+        add(panelMessage, BorderLayout.NORTH);
         ActionListener actionListener1 = new btnStart();
         btnStart.addActionListener(actionListener1);
         ActionListener actionListener2 = new btnStop();
@@ -44,9 +44,9 @@ public class ChatServer extends JFrame {
     public class btnStop implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             if(stopConst){
-                panelMesagge.removeAll();
-                panelMesagge.repaint();
-                panelMesagge.revalidate();
+                panelMessage.removeAll();
+                panelMessage.repaint();
+                panelMessage.revalidate();
                 startConst = true;
                 stopConst = false;
             }
@@ -60,7 +60,7 @@ public class ChatServer extends JFrame {
             if (startConst) {
                 if(file.exists()){
                     try {
-                        chatArchive(file, panelMesagge);
+                        chatArchive(file, panelMessage);
                     } catch (Exception ex) {
                         throw new RuntimeException(ex);
                     }

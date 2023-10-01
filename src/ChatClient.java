@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -51,7 +50,7 @@ public class ChatClient extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if(chatServ.stopConst){
                     try {
-                        addMessage(chatServ.panelMesagge);
+                        addMessage(chatServ.panelMessage);
                     } catch (Exception ex) {
                         throw new RuntimeException(ex);
                     }
@@ -65,7 +64,7 @@ public class ChatClient extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if(chatServ.stopConst){
                     try {
-                        addMessage(chatServ.panelMesagge);
+                        addMessage(chatServ.panelMessage);
                     } catch (Exception ex) {
                         throw new RuntimeException(ex);
                     }
